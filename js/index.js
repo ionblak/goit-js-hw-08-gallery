@@ -24,4 +24,18 @@ const createElementGallery = (arr) =>
 createElementGallery(arr);
 
 // Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
-listRef.addEventListener("click");
+listRef.addEventListener("click", onGalleryClick);
+
+function onGalleryClick(event) {
+  const imageRef = event.target;
+
+  event.preventDefault();
+
+  if (imageRef.nodeName !== "IMG") {
+    return;
+  }
+  const urlLargerImage = imageRef.dataset.source;
+  console.log(urlLargerImage);
+}
+
+// Открытие модального окна по клику на элементе галереи.

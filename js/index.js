@@ -38,7 +38,7 @@ createElementGallery(arr);
 listRef.addEventListener("click", onGalleryClick);
 modalButtonRef.addEventListener("click", closeModal);
 modalOverlayRef.addEventListener("click", closeModal);
-document.addEventListener("keydown", closeModalWithKey);
+window.addEventListener("keydown", closeModalWithKey);
 
 function onGalleryClick(event) {
   const imageRef = event.target;
@@ -64,7 +64,7 @@ function openModal(url, value, index) {
   modalImgRef.alt = value;
   modalImgRef.dataset.index = index;
 
-  // document.addEventListener("keydown", switchImage);
+  window.addEventListener("keydown", switchImage);
 }
 
 function closeModal() {
@@ -72,20 +72,39 @@ function closeModal() {
 
   modalImgRef.src = "";
   modalImgRef.alt = "";
+  modalImgRef.dataset.index = "";
 }
-
+// Закрытие модального окна кнопкой "Escape"
 function closeModalWithKey(event) {
   if (event.code === "Escape") {
     closeModal();
   }
 }
+// переключение картинок кнопками стрелок
+function switchImage(event) {
+  let currentIndex = Number(modalImgRef.dataset.index);
 
-// function switchImage(event) {
-//   if (event.code === "ArrowRight") {
-//     let newIndex = Number(modalImgRef.dataset.index);
-//     newIndex += 1;
+  if (event.code === "ArrowRight") {
+    if (currentIndex >= 1 && currentIndex < 9) {
+      currentIndex += 1;
+      const currentImg = document.querySelector(
+        `img[data-index='${currentIndex}']`
+      );
 
-//     console.log(newIndex);
-//   } else if (event.code === "ArrowLeht") {
-//   }
-// }
+      modalImgRef.src = currentImg.dataset.source;
+      modalImgRef.alt = currentImg.alt;
+      modalImgRef.dataset.index = currentImg.dataset.index;
+    }
+  } else if (event.code === "ArrowLeft") {
+    if (currentIndex <= 9 && currentIndex > 1) {
+      currentIndex -= 1;
+      const currentImg = document.querySelector(
+        `img[data-index='${currentIndex}']`
+      );
+
+      modalImgRef.src = currentImg.dataset.source;
+      modalImgRef.alt = currentImg.alt;
+      modalImgRef.dataset.index = currentImg.dataset.index;
+    }
+  }
+}

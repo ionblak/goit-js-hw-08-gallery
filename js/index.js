@@ -38,7 +38,6 @@ createElementGallery(arr);
 listRef.addEventListener("click", onGalleryClick);
 modalButtonRef.addEventListener("click", closeModal);
 modalOverlayRef.addEventListener("click", closeModal);
-window.addEventListener("keydown", closeModalWithKey);
 
 function onGalleryClick(event) {
   const imageRef = event.target;
@@ -65,6 +64,7 @@ function openModal(url, value, index) {
   modalImgRef.dataset.index = index;
 
   window.addEventListener("keydown", switchImage);
+  window.addEventListener("keydown", closeModalWithKey);
 }
 
 function closeModal() {
@@ -73,10 +73,12 @@ function closeModal() {
   modalImgRef.src = "";
   modalImgRef.alt = "";
   modalImgRef.dataset.index = "";
+  window.removeEventListener("keydown", closeModalWithKey);
 }
 // Закрытие модального окна кнопкой "Escape"
 function closeModalWithKey(event) {
   if (event.code === "Escape") {
+    console.log("asdas");
     closeModal();
   }
 }
@@ -85,7 +87,7 @@ function switchImage(event) {
   let currentIndex = Number(modalImgRef.dataset.index);
 
   if (event.code === "ArrowRight") {
-    if (currentIndex >= 1 && currentIndex < 9) {
+    if (currentIndex >= 1 && currentIndex < arr.length) {
       currentIndex += 1;
       const currentImg = document.querySelector(
         `img[data-index='${currentIndex}']`

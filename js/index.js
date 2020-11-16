@@ -8,31 +8,33 @@ const modalButtonRef = document.querySelector(
 );
 const modalImgRef = document.querySelector(".lightbox__image");
 const modalOverlayRef = document.querySelector(".lightbox__overlay");
-let number = 0;
 
-const createElementGallery = (arr) =>
-  arr.forEach((element) => {
-    const tagLi = document.createElement("li");
-    const tagA = document.createElement("a");
-    const tagImg = document.createElement("img");
+const createElementGallery = (item, index) => {
+  const galleryItemRef = document.createElement("li");
+  galleryItemRef.classList.add("gallery__item");
 
-    tagLi.classList.add("gallery__item");
+  const galleryLinkRef = document.createElement("a");
+  galleryLinkRef.classList.add("gallery__link");
+  galleryLinkRef.setAttribute("href", item.original);
 
-    tagA.classList.add("gallery__link");
-    tagA.href = element.original;
+  const galleryImgRef = document.createElement("img");
+  galleryImgRef.classList.add("gallery__image");
+  galleryImgRef.setAttribute("src", item.preview);
+  galleryImgRef.setAttribute("data-source", item.original);
+  galleryImgRef.setAttribute("data-index", index);
+  galleryImgRef.setAttribute("alt", item.description);
 
-    tagImg.classList.add("gallery__image");
-    tagImg.src = element.preview;
-    tagImg.dataset.source = element.original;
-    tagImg.alt = element.description;
+  galleryLinkRef.appendChild(galleryImgRef);
+  galleryItemRef.appendChild(galleryLinkRef);
+  listRef.appendChild(galleryItemRef);
 
-    number += 1;
-    tagImg.dataset.index = number;
+  return galleryItemRef;
+};
 
-    listRef.appendChild(tagLi).appendChild(tagA).appendChild(tagImg);
-  });
-
-createElementGallery(arr);
+const galleryItems = arr.map((item, index) =>
+  createElementGallery(item, index)
+);
+listRef.append(...galleryItems);
 
 // Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
 listRef.addEventListener("click", onGalleryClick);
@@ -87,7 +89,7 @@ function switchImage(event) {
   let currentIndex = Number(modalImgRef.dataset.index);
 
   if (event.code === "ArrowRight") {
-    if (currentIndex >= 1 && currentIndex < arr.length) {
+    if (currentIndex >= 0 && currentIndex < arr.length - 1) {
       currentIndex += 1;
       const currentImg = document.querySelector(
         `img[data-index='${currentIndex}']`
@@ -98,7 +100,7 @@ function switchImage(event) {
       modalImgRef.dataset.index = currentImg.dataset.index;
     }
   } else if (event.code === "ArrowLeft") {
-    if (currentIndex <= 9 && currentIndex > 1) {
+    if (currentIndex <= 9 && currentIndex > 0) {
       currentIndex -= 1;
       const currentImg = document.querySelector(
         `img[data-index='${currentIndex}']`
